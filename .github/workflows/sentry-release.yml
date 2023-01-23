@@ -1,0 +1,38 @@
+on:
+  workflow_call:
+    inputs:
+      sentry_project:
+        description: 'The slug of the project name in Sentry. One of SENTRY_PROJECT or projects is required.'
+        required: true
+        type: string
+      sentry_org:
+        description: 'The slug of the organization name in Sentry.'
+        required: false
+        type: string
+        default: axie-infinity
+      environment:
+        description: 'Set the environment for this release. E.g. "production" or "staging". Omit to skip adding deploy to release.'
+        required: true
+        type: string
+        default: production
+
+jobs:
+  sentry:
+    runs-on: [self-hosted, gke]
+    environment: '${{inputs.environment}}'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: '${{ secrets.SENTRY_AUTH_TOKEN }}'
+          SENTRY_ORG: '${{ inputs.sentry_org }}'
+          SENTRY_PROJECT: '${{ inputs.sentry_project }}'
+        with:
+          environment: '${{ inputs.environment }}'
+          version: '${{ github.ref }}'
+          ignore_missing: true
+          ignore_empty: true

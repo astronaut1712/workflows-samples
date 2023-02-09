@@ -63,7 +63,7 @@ jobs:
       - name: 'Install tools'
         run: |
           sudo apt-get update
-          sudo apt-get install cmake pkg-config libssl-dev
+          sudo apt-get install -y cmake pkg-config libssl-dev
 
       - name: 'Run Rust fmt'
         run: cargo fmt --all -- --check

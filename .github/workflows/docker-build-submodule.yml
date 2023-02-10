@@ -70,6 +70,7 @@ jobs:
           version: ${{ inputs.buildx_version }}
 
       - id: 'auth'
+        if: ${{ inputs.docker_push }}
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@ef5d53e30bbcd8d0836f4288f5e50ff3e086997d' #v0.8.3
         with:
@@ -99,7 +100,7 @@ jobs:
           file: ${{ inputs.dockerfile_path }}
           push: ${{ inputs.docker_push }}
           tags: ${{ steps.meta.outputs.tags }}
-          cache-from: type=registry,ref=${{ inputs.image_repository }}:buildcache
-          cache-to: type=registry,ref=${{ inputs.image_repository }}:buildcache,mode=max
+          # cache-from: type=registry,ref=${{ inputs.image_repository }}:buildcache
+          # cache-to: type=registry,ref=${{ inputs.image_repository }}:buildcache,mode=max
           secrets: |
             "github_token=${{ steps.gh-app.outputs.token }}"

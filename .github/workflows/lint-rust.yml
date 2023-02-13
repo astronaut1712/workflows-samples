@@ -21,6 +21,10 @@ on:
         default: 'redis'
         required: false
         type: string
+      rust_build:
+        required: false
+        type: boolean
+        default: false
     
 
 jobs:
@@ -48,6 +52,18 @@ jobs:
           token: ${{ steps.gh-app.outputs.token }}
           submodules: ${{ inputs.checkout_submodules }}
 
+      - name: 'Cache Cargo'
+        if: ${{ inputs.rust_build }}
+        uses: 'actions/cache@627f0f41f6904a5b1efbaed9f96d9eb58e92e920' #v3.0.11
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
       - name: 'Setup creds'
         run: |
           git config --global url."https://x-access-token:${{ steps.gh-app.outputs.token }}@github.com".insteadOf "ssh://git@github.com"
@@ -64,6 +80,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake pkg-config libssl-dev
+
+      - name: 'Rust Build'
+        if: ${{ inputs.rust_build }}
+        run: cargo build --release ${{ inputs.build_options }}
+        env:
+          CARGO_NET_GIT_FETCH_WITH_CLI: true
 
       - name: 'Run Rust fmt'
         run: cargo fmt --all -- --check

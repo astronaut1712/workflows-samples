@@ -63,7 +63,7 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
 
       - name: 'Build and Push'
-        uses: 'docker/build-push-action@c56af957549030174b10d6867f20e78cfd7debc5' #v3.2.0
+        uses: 'docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671' #v3.2.0
         with:
           context: ${{ inputs.docker_context }}
           file: ${{ inputs.dockerfile_path }}

@@ -46,3 +46,4 @@ jobs:
         with:
           path: '${{ inputs.path }}'
           destination: '${{ inputs.destination }}'
+          gzip: false

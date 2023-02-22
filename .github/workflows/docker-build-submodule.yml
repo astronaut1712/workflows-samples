@@ -26,6 +26,9 @@ on:
         required: false
         type: boolean
         default: true
+      latest_tag:
+        required: false
+        type: string
 
 jobs:
   build:
@@ -62,6 +65,7 @@ jobs:
             type=ref,suffix=-{{sha}},event=pr
             type=ref,suffix=-{{sha}},event=tag
             type=semver,event=tag,pattern={{raw}}
+            type=raw,value=${{ (inputs.latest_tag != '' && 'latest' ) }},enable=${{ inputs.latest_tag != '' }}
 
       # Enable Registry Cache
       - name: 'Set up Docker Buildx'

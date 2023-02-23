@@ -64,10 +64,6 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: 'Setup creds'
-        run: |
-          git config --global url."https://x-access-token:${{ steps.gh-app.outputs.token }}@github.com".insteadOf "ssh://git@github.com"
-
       - name: 'Install Rust toolchains (rustfmt, and clippy)'
         uses: 'dtolnay/rust-toolchain@e645b0cf01249a964ec099494d38d2da0f0b349f'
         with:
@@ -75,6 +71,10 @@ jobs:
           toolchain: ${{ inputs.toolchain_version }}
           components: rustfmt, clippy
           override: true
+
+      - name: 'Git Config'
+        run: |
+          git config --global url."https://x-access-token:${{ steps.gh-app.outputs.token }}@github.com".insteadOf "ssh://github.com"
 
       - name: 'Install tools'
         run: |

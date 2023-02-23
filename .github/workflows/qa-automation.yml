@@ -33,7 +33,7 @@ on:
 jobs:
   java:
 
-    runs-on: [self-hosted, gke]
+    runs-on: [self-hosted, stress-test]
     timeout-minutes: ${{ inputs.timeout_minutes }}
 
     steps:

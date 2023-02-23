@@ -52,7 +52,7 @@ on:
 jobs:
   report:
 
-    runs-on: [self-hosted, gke]
+    runs-on: [self-hosted, stress-test]
 
     services:
       postgres:

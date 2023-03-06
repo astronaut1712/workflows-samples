@@ -35,4 +35,4 @@ jobs:
         run: npm install
 
       - name: 'Run with Node'
-        run: node ${{ inputs.node_options }} ${{ inputs.node_script }} ${{ inputs.node_arguments }}
+        run: ${{ inputs.node_options }} node ${{ inputs.node_script }} ${{ inputs.node_arguments }}

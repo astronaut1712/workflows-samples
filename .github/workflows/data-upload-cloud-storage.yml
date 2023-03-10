@@ -36,12 +36,14 @@ jobs:
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c #v3.3.0
 
       - id: 'auth'
+        name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@ef5d53e30bbcd8d0836f4288f5e50ff3e086997d' #v1.0.0
         with:
           workload_identity_provider: ${{ secrets.GH_ACTIONS_WIP }}
           service_account: ${{ secrets.GH_ACTIONS_SA_DATA }}
 
       - id: 'upload-folder'
+        name: 'Upload folder'
         uses: 'google-github-actions/upload-cloud-storage@a5b77a3bf84da1791719585d327e5f90ae5cb53c' #v1.0.0
         with:
           path: '${{ inputs.path }}'

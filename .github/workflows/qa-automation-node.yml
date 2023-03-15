@@ -14,6 +14,11 @@ on:
         description: 'Script to execute'
         required: false
         type: string
+      timeout_minutes:
+        description: 'Set timeout for this action'
+        required: false
+        type: number
+        default: 360
       node_arguments:
         description: 'node arguments'
         required: false
@@ -22,6 +27,7 @@ on:
 jobs:
   nodejs:
     runs-on: [self-hosted, stress-test]
+    timeout-minutes: ${{ inputs.timeout_minutes }}
     steps:
       - name: 'Checkout Repo'
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c #v3.0.2

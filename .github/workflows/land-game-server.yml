@@ -72,6 +72,11 @@ on:
         description: 'To describe a general deployment target'
         required: true
         type: string
+      client_assets:
+        description: 'Condition deploy build assets'
+        required: false
+        default: false
+        type: string
 
 jobs:
   build-and-deploy:
@@ -95,6 +100,7 @@ jobs:
 
       - name: 'Checkout Repo'
         uses: 'actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c' #v3.1.0
+        if: ${{ inputs.client_assets != 'true' }}
         with:
           token: ${{ steps.gh-app.outputs.token }}
           submodules: ${{ inputs.checkout_submodules }}
@@ -107,8 +113,15 @@ jobs:
           path: ${{ inputs.ansible_repository_path }}
           token: ${{ steps.gh-app.outputs.token }}
 
+      - name: 'Download Datapack'
+        if: ${{ inputs.client_assets == 'true' }}
+        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a
+        with:
+          name: datapack
+
       - name: 'Cache Cargo'
         uses: 'actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8' #v3.0.11
+        if: ${{ inputs.client_assets != 'true' }}
         with:
           path: |
             ~/.cargo/bin/
@@ -120,21 +133,25 @@ jobs:
 
       - name: 'Setup Rust'
         uses: 'dtolnay/rust-toolchain@e12eda571dc9a5ee5d58eecf4738ec291c66f295'
+        if: ${{ inputs.client_assets != 'true' }}
         with:
           profile: '${{ inputs.rust_profile }}'
           toolchain: '${{ inputs.rust_toolchain }}'
           components: '${{ inputs.rust_components }}'
 
       - name: 'Git Config'
+        if: ${{ inputs.client_assets != 'true' }}
         run: |
           git config --global url."https://x-access-token:${{ steps.gh-app.outputs.token }}@github.com".insteadOf "ssh://github.com"
 
       - name: 'Install tools'
+        if: ${{ inputs.client_assets != 'true' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y pkg-config libssl-dev libpq-dev
 
       - name: 'Rust Build'
+        if: ${{ inputs.client_assets != 'true' }}
         run: cargo build --release ${{ inputs.build_options }}
         env:
           CARGO_NET_GIT_FETCH_WITH_CLI: true

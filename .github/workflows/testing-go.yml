@@ -36,6 +36,15 @@ jobs:
     runs-on: [self-hosted, gke]
 
     steps:
+      - id: 'gh-app'
+        name: 'Get Token'
+        uses: 'tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c' #v1.7.0
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_PRIVATE_KEY }}
+      - name: 'Setup creds'
+        run: |
+          git config --global url."https://x-access-token:${{ steps.gh-app.outputs.token }}@github.com".insteadOf "ssh://git@github.com"
       - name: 'Setup Go'
         uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 #v3.3.0
         with:

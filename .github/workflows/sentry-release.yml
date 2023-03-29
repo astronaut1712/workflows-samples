@@ -12,7 +12,7 @@ on:
         default: axie-infinity
       environment:
         description: 'Set the environment for this release. E.g. "production" or "staging". Omit to skip adding deploy to release.'
-        required: true
+        required: false
         type: string
         default: production
 
